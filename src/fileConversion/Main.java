@@ -30,6 +30,10 @@ class Member {
     public String toString() {
         return id + "," + firstName + "," + lastName + "," + address + "," + city + "," + zip;
     }
+
+	public String getState() {
+		return state;
+	}
 }
 
 // Interface to export members to a CSV file
@@ -97,4 +101,3 @@ public class Main {
         }
     }
 }
-
