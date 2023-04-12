@@ -5,13 +5,14 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         String inputFile = "C:\\Users\\User\\Desktop\\Coding Aids\\input.txt";
-        String outputFile = "new_output.csv";
+        String outputFile = "new_output.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile));
              BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile))) {
 
             String line;
-            Map<String, String> keyValuePairs = new LinkedHashMap<>(); // Use LinkedHashMap instead of HashMap
+            List<Map<String, String>> keyValuePairsList = new ArrayList<>();
+            Map<String, String> keyValuePairs = new HashMap<>();
             while ((line = br.readLine()) != null) {
                 String inputLine = line;
                 String[] keyValue = inputLine.split(":");
@@ -19,7 +20,17 @@ public class Main {
                     String key = keyValue[0].trim();
                     String value = keyValue[1].trim();
                     keyValuePairs.put(key, value);
+                } else {
+                    // Assumes an empty line separates each set of key-value pairs
+                    if (!keyValuePairs.isEmpty()) {
+                        keyValuePairsList.add(keyValuePairs);
+                        keyValuePairs = new HashMap<>();
+                    }
                 }
+            }
+            // Add the last set of key-value pairs after reaching the end of the file
+            if (!keyValuePairs.isEmpty()) {
+                keyValuePairsList.add(keyValuePairs);
             }
 
             // Write CSV header
@@ -27,13 +38,15 @@ public class Main {
             bwr.newLine();
 
             // Write CSV rows
-            String name = keyValuePairs.get("Name");
-            String age = keyValuePairs.get("Age");
-            String city = keyValuePairs.get("City");
-            String gender = keyValuePairs.get("Gender");
-            String csvRow = name + ", " + age + ", " + city + ", " + gender;
-            bwr.write(csvRow);
-            bwr.newLine();
+            for (Map<String, String> kvp : keyValuePairsList) {
+                String name = kvp.get("Name");
+                String age = kvp.get("Age");
+                String city = kvp.get("City");
+                String gender = kvp.get("Gender");
+                String csvRow = name + ", " + age + ", " + city + ", " + gender;
+                bwr.write(csvRow);
+                bwr.newLine();
+            }
 
             System.out.println("Successfully wrote key-value pairs to CSV file: " + outputFile);
 
@@ -43,6 +56,8 @@ public class Main {
         }
     }
 }
+
+
 
 
 
