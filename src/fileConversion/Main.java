@@ -5,13 +5,13 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         String inputFile = "C:\\Users\\User\\Desktop\\Coding Aids\\input.txt";
-        String outputFile = "new_output.txt"; // Update to use .csv file extension
+        String outputFile = "new_output.csv";
 
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile));
-             BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile))) { // Move BufferedWriter outside the loop
+             BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile))) {
 
             String line;
-            Map<String, String> keyValuePairs = new HashMap<>(); // Move map outside the loop
+            Map<String, String> keyValuePairs = new LinkedHashMap<>(); // Use LinkedHashMap instead of HashMap
             while ((line = br.readLine()) != null) {
                 String inputLine = line;
                 String[] keyValue = inputLine.split(":");
@@ -22,15 +22,18 @@ public class Main {
                 }
             }
 
-            bwr.write("Key,Value");
+            // Write CSV header
+            bwr.write("Name, Age, City, Gender");
             bwr.newLine();
-            for (Map.Entry<String, String> entry : keyValuePairs.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                String csvRow = key + "," + value;
-                bwr.write(csvRow);
-                bwr.newLine();
-            }
+
+            // Write CSV rows
+            String name = keyValuePairs.get("Name");
+            String age = keyValuePairs.get("Age");
+            String city = keyValuePairs.get("City");
+            String gender = keyValuePairs.get("Gender");
+            String csvRow = name + ", " + age + ", " + city + ", " + gender;
+            bwr.write(csvRow);
+            bwr.newLine();
 
             System.out.println("Successfully wrote key-value pairs to CSV file: " + outputFile);
 
@@ -40,4 +43,8 @@ public class Main {
         }
     }
 }
+
+
+
+
 
